@@ -1,56 +1,61 @@
-from django.urls import reverse
-from django.shortcuts import render, redirect
-from .models import OrderItem
+
+from django.shortcuts import render
+from .models import OrderItem, Order
 from .forms import OrderCreateForm
 from cart.cart import Cart
-from django.contrib.admin.views.decorators import staff_member_required
-from django.shortcuts import get_object_or_404
-from .models import Order
-from django.conf import settings
-from django.http import HttpResponse
-from django.template.loader import render_to_string
-#import weasyprint
-
-@staff_member_required
-def admin_order_pdf(request, order_id):
-    order = get_object_or_404(Order, id=order_id)
-    html = render_to_string('orders/order/pdf.html',
-                            {'order': order})
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'filename=\
-        "order_{}.pdf"'.format(order.id)
-    weasyprint.HTML(string=html).write_pdf(response,
-        stylesheets=[weasyprint.CSS(
-            settings.STATIC_ROOT + 'css/pdf.css')])
-    return response
-
-@staff_member_required
-def admin_order_detail(request, order_id):
-    order = get_object_or_404(Order, id=order_id)
-    return render(request,
-                  'admin/orders/order/detail.html',
-                  {'order': order})
+from django.core.mail import send_mail, BadHeaderError
+from django.urls import reverse
+from django.shortcuts import render, redirect
 
 def order_create(request):
     cart = Cart(request)
     if request.method == 'POST':
+        initial = {
+            'first_name': request.user.get_full_name(),
+            'email': request.user.email
+        }
         form = OrderCreateForm(request.POST)
+
         if form.is_valid():
-            order = form.save()
+            totalPrice = 0.00;
+            order = form.save(commit=False)
+            order.customerid = request.user.id
+            order.totalprice = totalPrice
+            order.email = request.user.email
+
+            order.save()
             for item in cart:
                 OrderItem.objects.create(order=order,
                                          product=item['product'],
                                          price=item['price'],
                                          quantity=item['quantity'])
-            # clear the cart
-            cart.clear()
-            # set the order in the session
-            request.session['order_id'] = order.id
-            # redirect for payment
-            return redirect(reverse('payment:process'))
+                totalPrice += float(item['price']*item['quantity'])
+            order.totalprice = totalPrice
+            order.save()
+            toaddresses= []
+            toaddresses.append(request.user.email)
+            send_mail('Order Placed Successfully', 'Hi '+order.last_name+'\n\nYour order of total $'+str(order.totalprice)+' has been successfully placed.\n\n Yours sincerely. \nEuropes Corner', request.user.email, toaddresses)
 
+
+
+            cart.clear()
+            return render(request,
+                          'orders/order/created.html',
+                          {'order': order})
     else:
         form = OrderCreateForm()
     return render(request,
                   'orders/order/create.html',
                   {'cart': cart, 'form': form})
+
+def order_list(request):
+    orders = Order.objects.filter(customerid=request.user.id)
+    return render(request,
+                  'MyOrders.html',
+                  {'orders': orders})
+
+def order_detail(request, pk):
+    orderItems = OrderItem.objects.filter(order=pk)
+    return render(request,
+                  'OrderDetail.html',
+                  {'orderitems': orderItems})
