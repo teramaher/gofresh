@@ -34,7 +34,7 @@ def order_create(request):
             order.save()
             toaddresses= []
             toaddresses.append(request.user.email)
-            send_mail('Order Placed Successfully', 'Hi '+order.last_name+'\n\nYour order of total $'+str(order.totalprice)+' has been successfully placed.\n\n Yours sincerely. \nEuropes Corner', request.user.email, toaddresses)
+            send_mail('Order Placed Successfully', 'Hi '+order.last_name+'\n\nYour order of total $'+str(order.totalprice)+' has been successfully placed.\n\n Yours sincerely. \nGo Fresh', request.user.email, toaddresses)
 
 
 

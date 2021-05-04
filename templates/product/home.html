@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+  home page
+{% endblock %}
+{% block content %}
+<style>
+ body{
+     margin-left: fill;
+     background-color: black;
+
+     text-align: center;
+ }
+ hr{
+    margin-left: 30%;
+    margin-right: 30%;
+}
+ ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+  background-color: #111;
+}
+
+.column {
+  float: left;
+  width: 50%;
+
+
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+ </style>
+    <body style="background-color: black; padding: 0px 0px;">
+<div class="row" >
+  <div class="column" style="background-color:black;color: #FFBB20;font-size: 60px;height: 500px;">
+
+      <img src="{% static "images/logo.jpg" %}">
+
+  </div>
+  <div class="column" style="background-color:black;color: white;font-size: 30px;height: 500px;">
+    <h2>Check Us Out</h2>
+      <p>Welcome to Go-Fresh, everyone’s favorite online store. We’ve got great deals available on a selection of our newest arrivals and clearance items. Browse through our catalog today and save big on your next purchase.</p>
+
+  </div>
+</div>
+
+<div class="row">
+  <div class="column" style="background-color:#333;color: white;font-size: 30px;height: 500px;">
+    <h2>Get In Touch</h2>
+     <p> We’d love to hear from you! Get in touch, and we’ll reply promptly.
+      <br/>1234 N 56 ST
+      <br/>chairston@unomaha.edu
+      <br/>123-456-7890</p>
+  </div>
+
+  <div class="column" style="background-color:#333;color: white;font-size: 15px;height: 500px; ">
+      <br><br>
+      <img src="{% static "images/veggies.jpg" %}" height = "300" width = "400">
+
+  </div>
+</div>
+    </body>
+{% endblock %}

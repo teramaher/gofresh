@@ -5,6 +5,13 @@ from .models import Category, Product
 from django.db.models import Q
 from cart.forms import CartAddProductForm
 
+def home(request):
+    return render(request, 'product/home.html')
+
+def schedule(request):
+    return render(request, 'product/schedule.html')
+
+
 
 def product_list(request, category_slug=None):
     category = None

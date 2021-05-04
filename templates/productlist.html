@@ -37,9 +37,9 @@ $(document).ready(function(){
                 {% csrf_token %}
                 <select name = "drop1" id="pricefilter" style="width: 100%">
                     <option value="All" {% if pricerange == 'All'  %}selected {% endif %}>All</option>
-                    <option value="0-500" {% if pricerange == '0-500'  %}selected {% endif %}>0-500</option>
-                    <option value="500-1000" {% if pricerange == '500-1000' %}selected {% endif %}>500-1000</option>
-                    <option value=">1000" {% if pricerange == '>1000' %}selected {% endif %}>>1000</option>
+                    <option value="0-500" {% if pricerange == '0-5'  %}selected {% endif %}>0-5</option>
+                    <option value="500-1000" {% if pricerange == '5-10' %}selected {% endif %}>5-10</option>
+                    <option value=">1000" {% if pricerange == '>10' %}selected {% endif %}>>10</option>
 
                 </select>
 
@@ -107,7 +107,7 @@ $(document).ready(function(){
             text-decoration: none;
         }
         .sidenav li a:hover {
-            background-color: #555;
+            background-color: #FFBB20;
             color: white;
         }
         .product-list{
